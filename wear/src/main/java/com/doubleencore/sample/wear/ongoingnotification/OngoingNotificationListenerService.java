@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class OngoingNotificationListenerService extends WearableListenerService {
     private static final String TAG = OngoingNotificationListenerService.class.getSimpleName();
 
+    // These values must match the values used in MainActivity
     private static final String PATH = "/ongoingnotification";
     private static final String KEY_TITLE = "title";
     private static final String KEY_IMAGE = "image";

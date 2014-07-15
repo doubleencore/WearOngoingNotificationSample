@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">Wear Ongoing Notification Sample</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="send_message">Send Message</string>
 
 </resources>
