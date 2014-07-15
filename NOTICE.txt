@@ -1,4 +1,9 @@
-Portions of the files in this folder are:
+The following notice applies to portions of the following files:
+
+mobile/src/main/java/com/doubleencore/sample/wear/ongoingnotification/MainActivity.java
+wear/src/main/java/com/doubleencore/sample/wear/ongoingnotification/NotificationActivity.java
+wear/src/main/java/com/doubleencore/sample/wear/ongoingnotification/OngoingNotificationListenerService.java
+ 
 ------------------------------------------------------------
 
 
