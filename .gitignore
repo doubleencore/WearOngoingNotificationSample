@@ -1,0 +1,28 @@
+# Ant
+bin
+gen
+build.xml
+ant.properties
+local.properties
+
+# OSX Noise
+.DS_Store
+tmp
+
+# IntelliJ idea
+out
+.idea
+*.iml
+*.ipr
+*.iws
+classes
+
+# Gradle
+build
+.gradle
+
+# Maven
+target
+release.properties
+pom.xml.*
+
