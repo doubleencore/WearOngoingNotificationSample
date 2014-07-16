@@ -3,6 +3,7 @@ package com.doubleencore.sample.wear.ongoingnotification;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -22,11 +26,6 @@ import java.io.ByteArrayOutputStream;
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    // These values must match the values used in OngoingNotificationListenerService
-    private static final String PATH = "/ongoingnotification";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_IMAGE = "image";
-
     private GoogleApiClient mGoogleApiClient;
     private int count = 0;
 
@@ -35,10 +34,17 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
+            }
+        });
+
+        findViewById(R.id.dismiss_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissNotification();
             }
         });
 
@@ -64,14 +70,14 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     private void sendMessage() {
         if (mGoogleApiClient.isConnected()) {
-            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(PATH);
+            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(Constants.PATH_NOTIFICATION);
 
             // Add data to the request
-            putDataMapRequest.getDataMap().putString(KEY_TITLE, String.format("hello world! %d", count++));
+            putDataMapRequest.getDataMap().putString(Constants.KEY_TITLE, String.format("hello world! %d", count++));
 
             Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
             Asset asset = createAssetFromBitmap(icon);
-            putDataMapRequest.getDataMap().putAsset(KEY_IMAGE, asset);
+            putDataMapRequest.getDataMap().putAsset(Constants.KEY_IMAGE, asset);
 
             PutDataRequest request = putDataMapRequest.asPutDataRequest();
 
@@ -82,6 +88,27 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                             Log.d(TAG, "putDataItem status: " + dataItemResult.getStatus().toString());
                         }
                     });
+        }
+    }
+
+    private void dismissNotification() {
+        if (mGoogleApiClient.isConnected()) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    NodeApi.GetConnectedNodesResult nodes =
+                            Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                    for (Node node : nodes.getNodes()) {
+                        MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(
+                                mGoogleApiClient, node.getId(), Constants.PATH_DISMISS, null).await();
+                        if (!result.getStatus().isSuccess()) {
+                            Log.e(TAG, "ERROR: failed to send Message: " + result.getStatus());
+                        }
+                    }
+
+                    return null;
+                }
+            }.execute();
         }
     }
 

@@ -14,6 +14,7 @@ import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -25,11 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class OngoingNotificationListenerService extends WearableListenerService {
     private static final String TAG = OngoingNotificationListenerService.class.getSimpleName();
-
-    // These values must match the values used in MainActivity
-    private static final String PATH = "/ongoingnotification";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_IMAGE = "image";
 
     private GoogleApiClient mGoogleApiClient;
     private int notificationId = 100;
@@ -60,11 +56,11 @@ public class OngoingNotificationListenerService extends WearableListenerService 
         for (DataEvent event : events) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 String path = event.getDataItem().getUri().getPath();
-                if (PATH.equals(path)) {
+                if (Constants.PATH_NOTIFICATION.equals(path)) {
                     // Get the data out of the event
                     DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-                    final String title = dataMapItem.getDataMap().getString(KEY_TITLE);
-                    Asset asset = dataMapItem.getDataMap().getAsset(KEY_IMAGE);
+                    final String title = dataMapItem.getDataMap().getString(Constants.KEY_TITLE);
+                    Asset asset = dataMapItem.getDataMap().getAsset(Constants.KEY_IMAGE);
 
                     // Build the intent to display our custom notification
                     Intent notificationIntent = new Intent(this, NotificationActivity.class);
@@ -91,6 +87,14 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                     Log.d(TAG, "Unrecognized path: " + path);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals(Constants.PATH_DISMISS)) {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.cancel(notificationId);
         }
     }
 }

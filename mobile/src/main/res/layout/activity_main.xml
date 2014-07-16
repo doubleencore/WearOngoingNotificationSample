@@ -11,8 +11,13 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/send_button"
         android:text="@string/send_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/dismiss_button"
+        android:text="@string/dismiss_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
