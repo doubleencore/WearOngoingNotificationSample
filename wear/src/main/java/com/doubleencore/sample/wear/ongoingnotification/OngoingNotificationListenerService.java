@@ -1,9 +1,9 @@
 package com.doubleencore.sample.wear.ongoingnotification;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
@@ -73,11 +73,11 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                             PendingIntent.FLAG_UPDATE_CURRENT);
 
                     // Create the ongoing notification
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    Notification.Builder notificationBuilder = new Notification.Builder(this)
                             .setSmallIcon(R.drawable.ic_launcher)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                             .setOngoing(true)
-                            .extend(new NotificationCompat.WearableExtender()
+                            .extend(new Notification.WearableExtender()
                                     .setDisplayIntent(notificationPendingIntent));
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 

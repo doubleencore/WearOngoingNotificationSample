@@ -1,6 +1,7 @@
 package com.doubleencore.sample.wear.ongoingnotification;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,7 +50,7 @@ public class NotificationActivity extends Activity {
 
             final Asset asset = intent.getParcelableExtra(EXTRA_IMAGE);
 
-            loadBitmapFromAsset(asset, mImageView);
+            loadBitmapFromAsset(this, asset, mImageView);
         }
 
         random = new Random();
@@ -61,7 +62,7 @@ public class NotificationActivity extends Activity {
         });
     }
 
-    private void loadBitmapFromAsset(final Asset asset, final ImageView target) {
+    private static void loadBitmapFromAsset(final Context context, final Asset asset, final ImageView target) {
         if (asset == null) {
             throw new IllegalArgumentException("Asset must be non-null");
         }
@@ -69,7 +70,7 @@ public class NotificationActivity extends Activity {
         new AsyncTask<Asset, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Asset... assets) {
-                GoogleApiClient googleApiClient = new GoogleApiClient.Builder(NotificationActivity.this)
+                GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                         .addApi(Wearable.API)
                         .build();
                 ConnectionResult result =
