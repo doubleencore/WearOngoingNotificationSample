@@ -1,13 +1,12 @@
-apply plugin: 'com.android.application'
-
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.doubleencore.sample.wear.ongoingnotification"
-        minSdkVersion 20
+        applicationId "com.doubleencore.sample.wear.ongoingnotification.shared"
+        minSdkVersion 15
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
@@ -22,7 +21,4 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':shared')
-    compile 'com.google.android.support:wearable:+'
-    compile 'com.google.android.gms:play-services-wearable:+'
 }

@@ -3,5 +3,6 @@
 
     <string name="app_name">Wear Ongoing Notification Sample</string>
     <string name="send_message">Send Message</string>
+    <string name="dismiss_notification">Dismiss Notification</string>
 
 </resources>

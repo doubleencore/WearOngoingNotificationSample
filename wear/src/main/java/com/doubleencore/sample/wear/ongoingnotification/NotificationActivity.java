@@ -1,14 +1,18 @@
 package com.doubleencore.sample.wear.ongoingnotification;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -16,6 +20,7 @@ import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.Wearable;
 
 import java.io.InputStream;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,6 +34,7 @@ public class NotificationActivity extends Activity {
 
     private ImageView mImageView;
     private TextView mTextView;
+    Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +50,19 @@ public class NotificationActivity extends Activity {
 
             final Asset asset = intent.getParcelableExtra(EXTRA_IMAGE);
 
-            loadBitmapFromAsset(asset, mImageView);
+            loadBitmapFromAsset(this, asset, mImageView);
         }
+
+        random = new Random();
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTextView.setTextColor(Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256)));
+            }
+        });
     }
 
-    private void loadBitmapFromAsset(final Asset asset, final ImageView target) {
+    private static void loadBitmapFromAsset(final Context context, final Asset asset, final ImageView target) {
         if (asset == null) {
             throw new IllegalArgumentException("Asset must be non-null");
         }
@@ -56,7 +70,7 @@ public class NotificationActivity extends Activity {
         new AsyncTask<Asset, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Asset... assets) {
-                GoogleApiClient googleApiClient = new GoogleApiClient.Builder(NotificationActivity.this)
+                GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                         .addApi(Wearable.API)
                         .build();
                 ConnectionResult result =
