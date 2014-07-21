@@ -1,6 +1,7 @@
 package com.doubleencore.sample.wear.ongoingnotification;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -26,9 +27,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class OngoingNotificationListenerService extends WearableListenerService {
     private static final String TAG = OngoingNotificationListenerService.class.getSimpleName();
+    private static final int NOTIFICATION_ID = 100;
 
     private GoogleApiClient mGoogleApiClient;
-    private int notificationId = 100;
 
     @Override
     public void onCreate() {
@@ -79,10 +80,10 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                             .setOngoing(true)
                             .extend(new Notification.WearableExtender()
                                     .setDisplayIntent(notificationPendingIntent));
-                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
                     // Build the notification and show it
-                    notificationManager.notify(notificationId, notificationBuilder.build());
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                 } else {
                     Log.d(TAG, "Unrecognized path: " + path);
                 }
@@ -94,7 +95,7 @@ public class OngoingNotificationListenerService extends WearableListenerService 
     public void onMessageReceived(MessageEvent messageEvent) {
         if (messageEvent.getPath().equals(Constants.PATH_DISMISS)) {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.cancel(notificationId);
+            notificationManager.cancel(NOTIFICATION_ID);
         }
     }
 }
