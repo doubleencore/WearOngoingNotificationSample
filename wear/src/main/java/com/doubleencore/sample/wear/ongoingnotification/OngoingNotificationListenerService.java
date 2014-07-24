@@ -74,16 +74,24 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                             PendingIntent.FLAG_UPDATE_CURRENT);
 
                     // Create the ongoing notification
-                    Notification.Builder notificationBuilder = new Notification.Builder(this)
-                            .setSmallIcon(R.drawable.ic_launcher)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                            .setOngoing(true)
-                            .extend(new Notification.WearableExtender()
-                                    .setDisplayIntent(notificationPendingIntent));
 
-                    // Build the notification and show it
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                    // Use this for multipage notifications
+//                    Notification secondPageNotification =
+//                            new Notification.Builder(this)
+//                                    .extend(new Notification.WearableExtender()
+//                                            .setDisplayIntent(notificationPendingIntent))
+//                                    .build();
+
+                    Notification.Builder notificationBuilder =
+                            new Notification.Builder(this)
+                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .extend(new Notification.WearableExtender()
+                                            .setDisplayIntent(notificationPendingIntent)
+//                                            .addPage(secondPageNotification)
+                                    );
+
+                    ((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
+                            .notify(NOTIFICATION_ID, notificationBuilder.build());
                 } else {
                     Log.d(TAG, "Unrecognized path: " + path);
                 }
